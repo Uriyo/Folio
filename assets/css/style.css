@@ -110,6 +110,7 @@
 
 
 /* Slideshow container */
+/* Slideshow container */
 .slideshow-container {
   position: relative;
   max-width: 100%;
@@ -121,8 +122,8 @@
 }
 
 .slide img {
-  width: 850px;
-  height: 420px;
+  width: 100%;
+  height: auto;
   border-radius: 8px;
 }
 
@@ -155,6 +156,22 @@
 /* On hover, add a black background color with a little bit see-through */
 .prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.8);
+}
+
+/* Responsive layout - makes the slideshow full width on smaller screens */
+@media screen and (max-width: 600px) {
+  .prev, .next {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+.hobby-content, .slideshow-container {
+  margin-bottom: 20px;
+}
+
+.hobby-content h3, .hobby-content p {
+  margin-bottom: 20px;
 }
 
 
