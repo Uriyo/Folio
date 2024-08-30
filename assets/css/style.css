@@ -164,6 +164,11 @@
     font-size: 14px;
     padding: 12px;
   }
+  .slide img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
 }
 
 .hobby-content, .slideshow-container {
