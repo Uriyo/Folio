@@ -69,22 +69,106 @@ for (let i = 0; i < filterBtn.length; i++) {
 }
 
 // contact form variables
-const form = document.querySelector("[data-form]");
-const formInputs = document.querySelectorAll("[data-form-input]");
-const formBtn = document.querySelector("[data-form-btn]");
+// Form validation
+// Form validation
+const form = document.querySelector('[data-form]');
+const formInputs = document.querySelectorAll('[data-form-input]');
+const formBtn = document.querySelector('[data-form-btn]');
 
-// add event to all form input field
-for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
-    // check form validation
-    if (form.checkValidity()) {
-      formBtn.removeAttribute("disabled");
-    } else {
-      formBtn.setAttribute("disabled", "");
-    }
+// Enable/disable submit button based on form validity
+formInputs.forEach(input => {
+  input.addEventListener('input', () => {
+    formBtn.disabled = !form.checkValidity();
   });
-}
+});
 
+// Form submission handler
+form.addEventListener('submit', async function(event) {
+  event.preventDefault();
+  
+  // Disable form while submitting
+  formBtn.disabled = true;
+  
+  // Create loading state
+  const originalBtnContent = formBtn.innerHTML;
+  formBtn.innerHTML = '<span>Sending...</span>';
+  
+  const formData = {
+    fullname: form.querySelector('input[name="fullname"]').value.trim(),
+    email: form.querySelector('input[name="email"]').value.trim(),
+    message: form.querySelector('textarea[name="message"]').value.trim()
+  };
+
+  try {
+    const scriptId = 'AKfycbyDo1gCNfu_Ay_A2iGb2z2AYJ2ehhnktCnaPXMKoV9nSzjT4AGUqH3xlDV0NqHklHW5';
+    const url = `https://script.google.com/macros/s/${scriptId}/exec`;
+    
+    // Create URL-encoded form data
+    const urlEncodedData = new URLSearchParams();
+    Object.entries(formData).forEach(([key, value]) => {
+      urlEncodedData.append(key, value);
+    });
+
+    const response = await fetch(url, {
+      redirect: 'follow',
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: urlEncodedData.toString()
+    });
+    console.log(response);
+
+    // Reset form and show success message
+    form.reset();
+    showNotification('Message sent successfully!', 'success');
+    
+  } catch (error) {
+    console.error('Submission error:', error);
+    showNotification('Failed to send message. Please try again.', 'error');
+  } finally {
+    // Reset button state
+    formBtn.innerHTML = originalBtnContent;
+    formBtn.disabled = false;
+  }
+});
+
+// Notification helper function
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+    color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  `;
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => {
+    notification.style.opacity = '1';
+    notification.style.transform = 'translateY(0)';
+  }, 10);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateY(20px)';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
 // page navigation variables
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
