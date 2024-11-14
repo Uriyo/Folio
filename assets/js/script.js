@@ -100,7 +100,8 @@ form.addEventListener('submit', async function(event) {
   };
 
   try {
-    const scriptId = 'AKfycbyDo1gCNfu_Ay_A2iGb2z2AYJ2ehhnktCnaPXMKoV9nSzjT4AGUqH3xlDV0NqHklHW5';
+    const scriptId = window.SCRIPT_ID;
+    // const scriptId = '';
     const url = `https://script.google.com/macros/s/${scriptId}/exec`;
     
     // Create URL-encoded form data
@@ -110,14 +111,15 @@ form.addEventListener('submit', async function(event) {
     });
 
     const response = await fetch(url, {
-      redirect: 'follow',
+      redirect: "follow",
       method: 'POST',
       mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+         'Content-Type': 'application/json'
       },
-      body: urlEncodedData.toString()
+      body: JSON.stringify(formData)
     });
+    
     console.log(response);
 
     // Reset form and show success message
